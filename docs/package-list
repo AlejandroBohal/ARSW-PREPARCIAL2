@@ -1,0 +1,7 @@
+edu.eci.arsw.coronavirus
+edu.eci.arsw.coronavirus.cache
+edu.eci.arsw.coronavirus.cache.impl
+edu.eci.arsw.coronavirus.controller
+edu.eci.arsw.coronavirus.model
+edu.eci.arsw.coronavirus.services
+edu.eci.arsw.coronavirus.services.impl
