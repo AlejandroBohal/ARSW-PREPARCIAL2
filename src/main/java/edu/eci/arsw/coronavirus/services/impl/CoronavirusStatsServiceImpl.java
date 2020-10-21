@@ -1,6 +1,7 @@
 package edu.eci.arsw.coronavirus.services.impl;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import edu.eci.arsw.coronavirus.cache.ICoronaVirusStatsCache;
 import edu.eci.arsw.coronavirus.model.Case;
 import edu.eci.arsw.coronavirus.model.Localization;
 import edu.eci.arsw.coronavirus.services.CoronavirusStatsService;
@@ -10,33 +11,48 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+
+/**
+ * The type Coronavirus stats service.
+ */
 @Service
 public class CoronavirusStatsServiceImpl implements CoronavirusStatsService {
     @Autowired
-    HttpConnectionService httpConnectionService;
+    private HttpConnectionService httpConnectionService;
+    @Autowired
+    private ICoronaVirusStatsCache cache;
+    private static final String cacheAllCases = "allCases";
+    private static final String cacheCasesByCountry = "casesByCountry";
     @Override
     public List<Case> getAllCases() throws UnirestException {
-        List<Case> unsortedCases = new LinkedList<>();
-        List<Case> sortedCases = new LinkedList<>();
-        JSONArray array = httpConnectionService.getAllCases().getJSONArray("covid19Stats");
-        getCases(unsortedCases, array);
-        filterCasesByCountry(unsortedCases,sortedCases);
-        Collections.sort(sortedCases);
-        return sortedCases;
+        if(cache.getCache(cacheAllCases) == null || new Date().getTime() - cache.getDate(cacheAllCases) >= 30000){
+            List<Case> unsortedCases = new LinkedList<>();
+            List<Case> sortedCases = new LinkedList<>();
+            JSONArray array = httpConnectionService.getAllCases().getJSONArray("covid19Stats");
+            getCases(unsortedCases, array);
+            filterCasesByCountry(unsortedCases,sortedCases);
+            Collections.sort(sortedCases);
+            cache.putCache(cacheAllCases,sortedCases);
+        }
+        return cache.getCache(cacheAllCases).getStats();
     }
     @Override
     public List<Case> getCasesByCountry(String country) throws UnirestException {
-        List<Case> unsortedCases = new LinkedList<>();
-        List<Case> sortedCases = new LinkedList<>();
-        JSONArray array = httpConnectionService.getCasesByCountry(country).getJSONArray("covid19Stats");
-        getCases(unsortedCases, array);
-        filterCasesByProvince(unsortedCases,sortedCases);
-        setLocalization(sortedCases,country);
-        Collections.sort(sortedCases);
-        return sortedCases;
+        if(cache.getCache(cacheCasesByCountry) == null || new Date().getTime() - cache.getDate(cacheCasesByCountry) >= 30000) {
+            List<Case> unsortedCases = new LinkedList<>();
+            List<Case> sortedCases = new LinkedList<>();
+            JSONArray array = httpConnectionService.getCasesByCountry(country).getJSONArray("covid19Stats");
+            getCases(unsortedCases, array);
+            filterCasesByProvince(unsortedCases, sortedCases);
+            setLocalization(sortedCases, country);
+            Collections.sort(sortedCases);
+            cache.putCache(cacheCasesByCountry,sortedCases);
+        }
+        return cache.getCache(cacheCasesByCountry).getStats();
     }
 
     private List<Case> getCases(List<Case> cases, JSONArray array) {

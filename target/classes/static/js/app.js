@@ -15,7 +15,7 @@ const app = (() =>{
         }))
         receivedCases.forEach(({country, deaths, confirmed,recovered}) => {
             table.append(
-                `<tr data-toggle=tab href=#TabCountry onclick=app.getStatsCountry('${country}') style="cursor: pointer"> 
+                `<tr data-toggle=tab href=#TabCountry onclick=app.getStatsCountry('${country}','${deaths}','${confirmed}','${recovered}') style="cursor: pointer"> 
                       <td>${country}</td>
                       <td>${deaths}</td>
                       <td>${confirmed}</td>
@@ -50,7 +50,20 @@ const app = (() =>{
     const getAllCases = () =>{
         coronaservice.getAllCases(mapCasesToObjects);
     }
-    const getStatsByCountry = (country) =>{
+    const fillTableStats = (country,deaths,confirmed,recovered) =>{
+        let table = $("#case > tbody");
+        table.empty()
+        table.append(
+            `<tr> <td>Country</td> <td>${country}</td> </tr>
+             <tr> <td>Deaths</td> <td>${deaths}</td> </tr>
+             <tr> <td>Infected</td><td>${confirmed}</td></tr>
+             <tr> <td>Recovered</td> <td>${recovered}</td></tr>  
+            `
+        );
+
+    }
+    const getStatsByCountry = (country,deaths,confirmed,recovered) =>{
+        fillTableStats(country,deaths,confirmed,recovered);
         coronaservice.getCasesByCountry(country,mapCasesById);
     }
     const initMap = (cases) =>{

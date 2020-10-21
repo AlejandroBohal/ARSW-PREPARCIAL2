@@ -9,7 +9,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+
 @Service
+
 public class HttpConnectionServiceImpl implements HttpConnectionService {
     public JSONObject getAllCases() throws UnirestException {
         HttpResponse<String> response = Unirest
@@ -29,6 +31,9 @@ public class HttpConnectionServiceImpl implements HttpConnectionService {
         return new JSONObject(response.getBody()).getJSONObject("data");
     }
     public JSONArray getCoordsByCountry(String country) throws UnirestException {
+        if(country.equals("US")){
+            country = "USA";
+        }
         HttpResponse<String> response = Unirest.get("https://rapidapi.p.rapidapi.com/name/" + country)
                 .header("x-rapidapi-host", "restcountries-v1.p.rapidapi.com")
                 .header("x-rapidapi-key", "e06d3cb55dmshaba3bacba6d96f0p1fa961jsnbf6e2afb02ab")

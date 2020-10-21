@@ -12,11 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * The type Coronavirus stats controller.
+ */
 @RestController
 @RequestMapping("/api")
+
 public class CoronavirusStatsController {
     @Autowired
     private CoronavirusStatsService coronavirusStatsService;
+
+    /**
+     * Get all cases response entity.
+     *
+     * @return the response entity
+     */
     @GetMapping("/cases")
     public ResponseEntity<?> getAllCases(){
         List<Case> data = null;
@@ -29,6 +40,14 @@ public class CoronavirusStatsController {
             return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
         }
     }
+
+    /**
+     * Gets cases by country.
+     *
+     * @param country the country
+     * @return the cases by country
+     * @throws UnirestException the unirest exception
+     */
     @GetMapping("/countries")
     public ResponseEntity<?> getCasesByCountry(@RequestParam String country) throws UnirestException {
         List<Case> data = null;
