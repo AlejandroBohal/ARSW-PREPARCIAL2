@@ -1,8 +1,61 @@
 # Escuela Colombiana de Ingeniería Julio Garavito - Arquitecturas de Software ARSW - Parcial Segundo Tercio
 
-## Deploy 
+## Descripción de la arquitectura
+
+La arquitectura es orientada a servicios, se posee un cliente asíncrono de javascript
+que consume la api del servidor, este servidor ofrece un servicio RestFull el cual cuenta
+con dos endpoints principales /api/cases y /api/countries, además consume la api de google
+que le provee un mapa.
+
+El servidor cuenta consume 2 apis externas de RapidApi, una para obtener estadísticas de
+los casos de covid y otra para obtener la localización de los países.
+
+Para obtener un bajo acoplamiento, se utilizó el principio de inversión de dependencias
+y se ofrecen los servicios a través de interfaces hacia el controlador, también se utilizó
+el principio de inversión de control a través de las anotaciones del framework spring.
+
+El servidor cuenta con una instancia de cache concurrente que permite mejorar el rendimiento
+de la aplicación y su capacidad de respuesta ante varios clientes.
+
+La aplicación se encuentra desplegada en heroku.
+
+## Instrucciones de compilación
+
+Para correr la aplicación localmente haga uso de los siguientes comandos:
+
+- Clone el respositorio
+    
+        git clone https://github.com/AlejandroBohal/ARSW-PREPARCIAL2
+	    cd ARSW-PREPARCIAL2
+	    
+- Compile el proyecto y ejecutelo localmente
+        
+        mvn package
+        mvn spring-boot:run
+
+## Deploy heroku 
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://preparcialcovid.herokuapp.com/)
+
+https://preparcialcovid.herokuapp.com/
+
+## Como se puede extender y como podría hacer que una función implemente un proveedor de servicios diferente:
+
+Como se mencionó anteriormente, la aplicación es bastante extensible debido a 
+la segregación de interfaces, se podrían crear varias implementaciones de los
+de los servicios y con el uso de las anotaciones @Autowired y @Qualifier se podrían tener
+implementaciones de proveedores diferentes. Es posible crear nuevos servicios ya que se tiene una arquitectura
+por capas (servicios, controllador, vista) y estas capas no dependen entre si.
+
+
+## Bonos y una evidencia de su ejecución.
+
+Se implementó el bono del cache concurrente que vuelve a realizar las peticiones
+al servidor externo.
+
+![](https://media.discordapp.net/attachments/352624122301513730/768393520560996392/unknown.png?width=595&height=475)
+
+![](https://media.discordapp.net/attachments/352624122301513730/768393648235610122/unknown.png?width=558&height=475)
 
 ## Preparación para el Parcial
 

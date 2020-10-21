@@ -18,11 +18,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api")
-
 public class CoronavirusStatsController {
     @Autowired
     private CoronavirusStatsService coronavirusStatsService;
-
     /**
      * Get all cases response entity.
      *
@@ -40,7 +38,6 @@ public class CoronavirusStatsController {
             return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
         }
     }
-
     /**
      * Gets cases by country.
      *
