@@ -1,8 +1,9 @@
 package edu.eci.arsw.coronavirus.model;
 
+import java.util.Comparator;
 import java.util.Date;
 
-public class Case {
+public class Case implements Comparable<Case>{
     private String city;
     private String province;
     private String country;
@@ -24,6 +25,12 @@ public class Case {
         this.deaths = deaths;
         this.recovered = recovered;
         this.localization = new Localization(0.0,0.0);
+    }
+
+    public Case(long deaths, long confirmed, long recovered) {
+        this.deaths = deaths;
+        this.confirmed = confirmed;
+        this. recovered = recovered;
     }
 
     public String getCity() {
@@ -96,5 +103,28 @@ public class Case {
 
     public void setLocalization(Localization localization) {
         this.localization = localization;
+    }
+
+    @Override
+    public String toString() {
+        return "Case{" +
+                "city='" + city + '\'' +
+                ", province='" + province + '\'' +
+                ", country='" + country + '\'' +
+                ", lastUpdate='" + lastUpdate + '\'' +
+                ", keyId='" + keyId + '\'' +
+                ", confirmed=" + confirmed +
+                ", deaths=" + deaths +
+                ", recovered=" + recovered +
+                ", localization=" + localization +
+                '}';
+    }
+
+    @Override
+    public int compareTo(Case o) {
+        int result = Comparator.comparing(Case::getDeaths).reversed()
+                .thenComparing(Case::getConfirmed).reversed()
+                .thenComparing(Case::getRecovered).reversed().compare(this,o);
+        return result;
     }
 }

@@ -15,8 +15,7 @@ const app = (() =>{
         }))
         receivedCases.forEach(({country, deaths, confirmed,recovered}) => {
             table.append(
-                `<tr> 
-                      <td><a data-toggle=tab href=#TabCountry onclick=app.getStatsCountry('${country}')>${country}</a></td>
+                `<tr data-toggle=tab href=#TabCountry onclick=app.getStatsCountry('${country}') style="cursor: pointer"> 
                       <td>${country}</td>
                       <td>${deaths}</td>
                       <td>${confirmed}</td>
@@ -54,11 +53,10 @@ const app = (() =>{
     const getStatsByCountry = (country) =>{
         coronaservice.getCasesByCountry(country,mapCasesById);
     }
-
     const initMap = (cases) =>{
         map = new google.maps.Map(document.getElementById('map'), {
             center: {lat: -34.397, lng: 150.644},
-            zoom: 8
+            zoom: 0
         });
         plotMarkers(cases);
     }
@@ -68,6 +66,7 @@ const app = (() =>{
         bounds = new google.maps.LatLngBounds();
         m.forEach(function (marker) {
             var position = new google.maps.LatLng(marker.localization.lat, marker.localization.lng);
+            console.log(position);
             markers.push(
                 new google.maps.Marker({
                     position: position,
